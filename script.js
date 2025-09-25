@@ -8,21 +8,28 @@ const getSum = () => {
   let total = 0;
 
   priceCells.forEach(cell => {
-    total += parseInt(cell.textContent); // convert text to number and add
+    total += parseInt(cell.textContent) || 0; // handle editable values
   });
 
-  // create a new row
-  const table = document.querySelector("table");
-  const newRow = document.createElement("tr");
-  const newCell = document.createElement("td");
+  // check if #ans already exists
+  let ansCell = document.querySelector("#ans");
+  if (!ansCell) {
+    const table = document.querySelector("table");
+    const newRow = document.createElement("tr");
+    const newCell = document.createElement("td");
 
-  // span across both columns
-  newCell.colSpan = 2;
-  newCell.style.fontWeight = "bold";
-  newCell.textContent = `Total Price = Rs ${total}`;
+    newCell.colSpan = 2;
+    newCell.id = "ans"; // required by Cypress test
+    newCell.style.fontWeight = "bold";
 
-  newRow.appendChild(newCell);
-  table.appendChild(newRow);
+    newRow.appendChild(newCell);
+    table.appendChild(newRow);
+
+    ansCell = newCell;
+  }
+
+  // update total
+  ansCell.textContent = total;
 };
 
 getSumBtn.addEventListener("click", getSum);
